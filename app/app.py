@@ -20,22 +20,21 @@ def decrypt():
     ciphertext_size = creds.ciphertext_size
     pass_iv_size = creds.pass_iv_size
 
-    print(__aes_dir)
-
     try:
-        subprocess.run(os.path.join(__aes_dir, "decrypt.exe") + " " + masterkey + " " + key + " " + key_iv + " " + ciphertext + " " + pass_iv + " " + str(masterkey_size) + " " + str(key_size) + " " + str(iv_size) + " " + str(ciphertext_size) + " " + str(pass_iv_size))
-
+        out = subprocess.run(os.path.join(__aes_dir, "tester.exe"))
     except Exception as e:
         print(f"Error occurred: {e}")
 
-    try:
-        output = open(os.path.join(__textfiles, "output.txt"), "r")
-        print("Decryption successful")
-        print(output.read())
-        output.close()
-        os.remove(os.path.join(__textfiles, "output.txt"))
-    except Exception as e:
-        print(f"Error occurred while reading output: {e}")
+    print(out.stdout)
+
+    # try:
+    #     output = open(os.path.join(__textfiles, "output.txt"), "r")
+    #     print("Decryption successful")
+    #     print(output.read())
+    #     output.close()
+    #     os.remove(os.path.join(__textfiles, "output.txt"))
+    # except Exception as e:
+    #     print(f"Error occurred while reading output: {e}")
 
 def main():
     decrypt()
