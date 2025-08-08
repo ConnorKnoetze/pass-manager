@@ -4,7 +4,7 @@ __creds_dir = os.path.abspath(os.path.dirname(__file__))
 __app_dir = __creds_dir[:-8]
 __project_dir = __app_dir[:-4]
 __aes_dir = os.path.join(__project_dir, "AES")
-__textfiles = os.path.join(__aes_dir, "textfiles")
+__textfiles = os.path.join(__project_dir, "textfiles")
 
 __masterkey_path = os.path.join(__textfiles, "masterkey.txt")
 __key_path = os.path.join(__textfiles, "key.txt")
