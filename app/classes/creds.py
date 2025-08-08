@@ -13,111 +13,79 @@ __ciphertext_path = os.path.join(__textfiles, "password.txt")
 __pass_iv_path = os.path.join(__textfiles, "pass_iv.txt")
 
 
-class creds():
+class Creds():
     # masterkey, key, key_iv, ciphertext, pass_iv, masterkey_size, key_size, iv_size, ciphertext_size, pass_iv_size
-    def __init__(self):
-        self._masterkey = None
-        self._key = None
-        self._key_iv = None
-        self._ciphertext = None
-        self._pass_iv = None
-        self.masterkey_size = None
-        self.key_size = None
-        self.iv_size = None
-        self.ciphertext_size = None
-        self.pass_iv_size = None
+    def __init__(self, masterkey, key, key_iv, ciphertext, pass_iv):
+        self.__masterkey = masterkey
+        self.__key = key
+        self.__key_iv = key_iv
+        self.__ciphertext = ciphertext
+        self.__pass_iv = pass_iv
+        self.__masterkey_size = len(masterkey) + 1
+        self.__key_size = len(key) + 1
+        self.__iv_size = len(key_iv) + 1
+        self.__ciphertext_size = len(ciphertext) + 1
+        self.__pass_iv_size = len(pass_iv) + 1
 
     @property
     def masterkey(self):
-        return self._masterkey
+        return self.__masterkey
 
-    @masterkey.setter
-    def masterkey(self, value):
-        self._masterkey = value
 
     @property
     def key(self):
-        return self._key
+        return self.__key
 
-    @key.setter
-    def key(self, value):
-        self._key = value
 
     @property
     def key_iv(self):
-        return self._key_iv
-
-    @key_iv.setter
-    def key_iv(self, value):
-        self._key_iv = value
+        return self.__key_iv
 
     @property
     def ciphertext(self):
-        return self._ciphertext
+        return self.__ciphertext
 
-    @ciphertext.setter
-    def ciphertext(self, value):
-        self._ciphertext = value
 
     @property
     def pass_iv(self):
-        return self._pass_iv
+        return self.__pass_iv
 
-    @pass_iv.setter
-    def pass_iv(self, value):
-        self._pass_iv = value
 
     @property
     def masterkey_size(self):
-        return self._masterkey_size if hasattr(self, '_masterkey_size') else None
+        return self.__masterkey_size
 
-    @masterkey_size.setter
-    def masterkey_size(self, value):
-        self._masterkey_size = value
 
     @property
     def key_size(self):
-        return self._key_size if hasattr(self, '_key_size') else None
+        return self.__key_size
 
-    @key_size.setter
-    def key_size(self, value):
-        self._key_size = value
 
     @property
     def iv_size(self):
-        return self._iv_size if hasattr(self, '_iv_size') else None
+        return self.__iv_size
 
-    @iv_size.setter
-    def iv_size(self, value):
-        self._iv_size = value
 
     @property
     def ciphertext_size(self):
-        return self._ciphertext_size if hasattr(self, '_ciphertext_size') else None
-
-    @ciphertext_size.setter
-    def ciphertext_size(self, value):
-        self._ciphertext_size = value
+        return self.__ciphertext_size
 
     @property
     def pass_iv_size(self):
-        return self._pass_iv_size if hasattr(self, '_pass_iv_size') else None
-
-    @pass_iv_size.setter
-    def pass_iv_size(self, value):
-        self._pass_iv_size = value
+        return self.__pass_iv_size
 
     def __str__(self):
-        return (f"masterkey: {self.masterkey}\n"
-                f"key: {self.key}\n"
-                f"key_iv: {self.key_iv}\n"
-                f"ciphertext: {self.ciphertext}\n"
-                f"pass_iv: {self.pass_iv}\n"
-                f"masterkey_size: {self.masterkey_size}\n"
-                f"key_size: {self.key_size}\n"
-                f"iv_size: {self.iv_size}\n"
-                f"ciphertext_size: {self.ciphertext_size}\n"
-                f"pass_iv_size: {self.pass_iv_size}\n")
+        return {"masterkey": self.masterkey,
+                "key": self.key,
+                "key_iv": self.key_iv,
+                "ciphertext": self.ciphertext,
+                "pass_iv": self.pass_iv,
+                "masterkey_size": self.__masterkey_size,
+                "key_size": self.key_size,
+                "iv_size": self.iv_size,
+                "ciphertext_size": self.ciphertext_size,
+                "pass_iv_size": self.pass_iv_size
+               }
 
 
 def get_creds():
@@ -127,22 +95,34 @@ def get_creds():
     ciphertext_file = open(__ciphertext_path)
     pass_iv_file = open(__pass_iv_path)
 
-    creds_instance = creds()
-    creds_instance.masterkey = masterkey_file.read().replace("\n", "\0")
-    creds_instance.key = key_file.read().replace("\n", "\0")
-    creds_instance.key_iv = key_iv_file.read().replace("\n", "\0")
-    creds_instance.ciphertext = ciphertext_file.read().replace("\n", "\0")
-    creds_instance.pass_iv = pass_iv_file.read().replace("\n", "\0")
-    creds_instance.masterkey_size = len(creds_instance.masterkey) + 1
-    creds_instance.key_size = len(creds_instance.key) + 1
-    creds_instance.iv_size = len(creds_instance.key_iv) + 1
-    creds_instance.ciphertext_size = len(creds_instance.ciphertext) + 1
-    creds_instance.pass_iv_size = len(creds_instance.pass_iv) + 1
+    creds_instance = Creds(
+        masterkey_file.read().replace("\n", "\0"),
+        key_file.read().replace("\n", "\0"),
+        key_iv_file.read().replace("\n", "\0"),
+        ciphertext_file.read().replace("\n", "\0"),
+        pass_iv_file.read().replace("\n", "\0")
+    )
 
     masterkey_file.close()
     key_file.close()
     key_iv_file.close()
     ciphertext_file.close()
     pass_iv_file.close()
+
+    return creds_instance
+
+def creds_init():
+    creds_instance = Creds()
+
+    creds_instance.masterkey = None
+    creds_instance.key = None
+    creds_instance.key_iv = None
+    creds_instance.ciphertext = None
+    creds_instance.pass_iv = None
+    creds_instance.masterkey_size = None
+    creds_instance.key_size = None
+    creds_instance.iv_size = None
+    creds_instance.ciphertext_size = None
+    creds_instance.pass_iv_size = None
 
     return creds_instance
